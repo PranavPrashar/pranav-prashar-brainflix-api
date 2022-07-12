@@ -2,9 +2,13 @@ const express = require("express");
 const app = express();
 const fs = require("fs");
 const uuid = require("uuid");
-// import { v4 as uuidv4 } from "uuid";
+const cors = require("cors");
 
-const readFile = JSON.parse(fs.readFileSync("./files/videosData.json"));
+app.use(cors());
+app.use(express.static("./public"));
+app.use(express.json()); // This middleware allows us to post JSON in req.body
+
+const readFile = JSON.parse(fs.readFileSync("./data/videosData.json"));
 
 app.get("/", function (req, res) {
   console.log("Response Succsessful");
@@ -12,7 +16,7 @@ app.get("/", function (req, res) {
 
 app.get("/register", function (req, res) {
   console.log("Register Endpoint Called");
-  const registeredAPIKeys = fs.readFileSync("./files/registeredAPIKEYS.json");
+  const registeredAPIKeys = fs.readFileSync("./data/registeredAPIKEYS.json");
 
   const apiKeysParsed = JSON.parse(registeredAPIKeys);
 
@@ -23,7 +27,7 @@ app.get("/register", function (req, res) {
     console.log(newAPiKey);
     // apiKeysParsed.push(newAPiKey);
     fs.writeFileSync(
-      "./files/registeredAPIKEYS.json",
+      "./data/registeredAPIKEYS.json",
       JSON.stringify(apiKeysParsed)
     );
     res.status(200).json(newAPiKey);
@@ -67,6 +71,31 @@ app.get("/videos/:videoid", function (req, res) {
     res.status(200).json(filteredById);
   }
   //   console.log(filteredById);
+});
+
+app.post("/videos", function (req, res) {
+  console.log("Video Post API Reached");
+  const videoData = readFile;
+
+  const videoObj = {
+    id: uuid.v4(),
+    title: req.body.title,
+    channel: req.body.channel,
+    image: "/images/default_image.jpg",
+  };
+
+  videoData.push(videoObj);
+
+  if (videoData && videoObj) {
+    fs.writeFileSync("./data/videosData.json", JSON.stringify(videoData));
+    res.status(201).json(videoObj);
+  } else {
+    res.status(400).json("Something went wrong");
+  }
+
+  // res.send(videoObj);
+
+  //What should we send as the body, like what infromation image + ? wont the rest of the object be super empty
 });
 
 app.listen(8080, function () {
