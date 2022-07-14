@@ -37,7 +37,7 @@ router.get("/:videoid", function (req, res) {
   console.log("/videos:videoid endpoint");
   const videosData = readFile;
 
-  const filteredById = videosData.filter((video) => {
+  const filteredById = videosData.find((video) => {
     return video.id === req.params.videoid;
   });
 
