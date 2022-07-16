@@ -13,7 +13,6 @@ const readFile = JSON.parse(fs.readFileSync("./data/videosData.json"));
 
 router.get("/", function (req, res) {
   console.log("Videos Endpoint Called");
-  //   const videosData = JSON.parse(fs.readFileSync("./files/videosData.json"));
   const videosData = readFile;
   const filteredData = videosData.map((video) => {
     return {
@@ -58,18 +57,51 @@ router.post("/", function (req, res) {
     image: "/images/default_image.jpg",
   };
 
-  videoData.push(videoObj);
+  const object = {
+    title: req.body.title,
+    channel: req.body.channel,
+    image: "/images/default_image.jpg",
+    description:
+      "Worried about finding the perfect travel accommodations? There are many things to consider when booking an accommodation. Consider picking the right location. Location is an important consideration for an enjoyable stay. Check the rating and price. Consider apartment or condo rentals. Weigh the food options. Is it family-friendly? Watch for extra fees. Assess the on-site amenities.",
+    views: "252,796",
+    likes: "4,905",
+    duration: "7:31",
+    video: "https://project-2-api.herokuapp.com/stream",
+    timestamp: 1631532721000,
+    comments: [
+      {
+        name: "Fionna Miller",
+        comment:
+          "Location location location! It blows my mind how many people don’t understand this, but you’ve summed it up so well here. The next time I travel, I’ll be on the beachfront.",
+        likes: 6,
+        timestamp: 1631816492000,
+      },
+      {
+        name: "Suzie Maxwell",
+        comment:
+          "I wish I could print out a video to show to my travel agent. Oh, what am I saying – they have a computer! Much appreciated advice, I can’t wait to put it into action soon.",
+        likes: 1,
+        timestamp: 1631799181000,
+      },
+      {
+        name: "Alasie Rivers",
+        comment:
+          "From five-star hotels to the cheapest spots – wherever you like to stay, THIS is the way to do it! I’ll take sunlight and a cozy reading corner over a pool any day of the week.",
+        likes: 0,
+        timestamp: 1631716921000,
+      },
+    ],
+    id: uuid.v4(),
+  };
 
-  if (videoData && videoObj) {
+  videoData.push(object);
+
+  if (videoData && object) {
     fs.writeFileSync("./data/videosData.json", JSON.stringify(videoData));
-    res.status(201).json(videoObj);
+    res.status(201).json(object);
   } else {
     res.status(400).json("Something went wrong");
   }
-
-  // res.send(videoObj);
-
-  //What should we send as the body, like what infromation image + ? wont the rest of the object be super empty
 });
 
 module.exports = router;
