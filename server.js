@@ -14,8 +14,7 @@ const videos = require("./routes/Videos");
 app.use((req, res, next) => {
   console.log("Incoming request: ", req.path);
 
-  // You have to call next if you want to proceed to next middleware
-  next();
+  next(); // You have to call next if you want to proceed to next middleware
 });
 
 app.get("/", function (req, res) {
@@ -35,7 +34,6 @@ app.get("/register", function (req, res) {
 
   if (apiKeysParsed) {
     console.log(newAPiKey);
-    // apiKeysParsed.push(newAPiKey);
     fs.writeFileSync(
       "./data/registeredAPIKEYS.json",
       JSON.stringify(apiKeysParsed)
